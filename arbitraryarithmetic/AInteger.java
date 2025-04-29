@@ -10,12 +10,12 @@ class AInteger {
     }
 
     // Constructor from string
-    public AInteger(String s){
+    public AInteger(String s) {
         integer = s;
     }
 
     // Copy constructor
-    public AInteger(AInteger other){
+    public AInteger(AInteger other) {
         this.integer = other.integer;
     }
 
@@ -396,8 +396,8 @@ class AInteger {
     // Sample test case in main method
     public static void main(String[] args) {
         try {
-            AInteger a = new AInteger("987654321");
-            AInteger b = new AInteger("-1");
+            AInteger a = new AInteger("987654321834979713239837487109885382986345146380986987132847149871497");
+            AInteger b = new AInteger("12");
             AInteger result = a.division(b);
             result.printValue();  // This shouldn't run
         } catch (ArithmeticException e) {
