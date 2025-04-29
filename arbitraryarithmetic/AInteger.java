@@ -287,77 +287,105 @@ class AInteger {
         String num2 = other.integer;
 
         boolean negative_result = false;
-    
-        // Determine if the final result should be negative
-        if ((num1.startsWith("-") && !num2.startsWith("-")) || 
-            (num2.startsWith("-") && !num1.startsWith("-"))) {
-            negative_result = true;
-    
-            // Remove negative sign from whichever number has it
-            if (num1.startsWith("-")) {
+
+        try{
+            
+            // Determine if the final result should be negative
+            if ((num1.startsWith("-") && !num2.startsWith("-")) || 
+                (num2.startsWith("-") && !num1.startsWith("-"))) {
+                negative_result = true;
+                
+                // Remove negative sign from whichever number has it
+                if (num1.startsWith("-")) {
+                    num1 = num1.substring(1);
+                } else {
+                    num2 = num2.substring(1);
+                }
+            }
+
+            // If both num1 and num2 are negative, just remove the negative signs from those
+            if(num1.startsWith("-")&&num2.startsWith("-")){
                 num1 = num1.substring(1);
-            } else {
                 num2 = num2.substring(1);
             }
-        }
 
-        // If both num1 and num2 are negative, just remove the negative signs from those
-        if(num1.startsWith("-")&&num2.startsWith("-")){
-            num1 = num1.substring(1);
-            num2 = num2.substring(1);
-        }
+            // Remove leading zeros from both num1, num2 strings
+            num1 = removeLeadingZeros(num1);
+            num2 = removeLeadingZeros(num2);
 
-        // Remove leading zeros from both num1, num2 strings
-        num1 = removeLeadingZeros(num1);
-        num2 = removeLeadingZeros(num2);
-
-        if (num2.equals("0")) {
-            throw new ArithmeticException("Division by zero error");
-        }
-        
-        int len1 = num1.length();
-        int len2 = num2.length();
-
-        if (len1 < len2 || (len1 == len2 && num1.compareTo(num2) < 0)){
-            return new AInteger("0");
-        }
-
-        if (num1.equals(num2)) {
-            return new AInteger(negative_result ? "-1" : "1");
-        }
-        
-        String remainder;
-        StringBuilder quotient = new StringBuilder();
-        String current = "";
-
-        for (int i = 0; i < num1.length(); i++) {
-            current += num1.charAt(i);
-            current = removeLeadingZeros(current);
-        
-            int count = 0;
-            while (!current.equals("0") && !substract_strings_integer(current, num2).startsWith("-")) {
-                current = substract_strings_integer(current, num2);
-                count++;
+            // Checking if the second number is 0 
+            if (num2.equals("0")) {
+                throw new ArithmeticException("Division by zero error");
             }
-            if(count == 0 && i == num1.length()-1){
-                continue;
+
+            // Storing the length of the num1 and num2 in new variables
+            int len1 = num1.length();
+            int len2 = num2.length();
+
+            // If the second number is greater than return 0
+            if (len1 < len2 || (len1 == len2 && num1.compareTo(num2) < 0)){
+                return new AInteger("0");
             }
-            quotient.append(count);
+
+            // If the num1 and num2 are exactly same return -1 or 1 accordingly
+            if (num1.equals(num2)) {
+                return new AInteger(negative_result ? "-1" : "1");
+            }
+
+            // Initialize a variable to store the remainder (will hold leftover part after division)
+            String remainder;
+
+            // StringBuilder to construct the quotient (final division result)
+            StringBuilder quotient = new StringBuilder();
+
+            // A string to build the current part of the dividend as we iterate
+            String current = "";
+
+            // Loop through each digit of the dividend (num1)
+            for (int i = 0; i < num1.length(); i++) {
+                // Append the current digit to 'current' to simulate bringing down the next digit in long division
+                current += num1.charAt(i);
+            
+                // Remove any leading zeros from 'current' to ensure accurate comparisons
+                current = removeLeadingZeros(current);
+            
+                // Initialize count for how many times num2 fits into 'current'
+                int count = 0;
+            
+                // Keep subtracting num2 from current until current becomes less than num2
+                while (!current.equals("0") && !substract_strings_integer(current, num2).startsWith("-")) {
+                    current = substract_strings_integer(current, num2);
+                    count++; // Increment the quotient digit
+                }
+            
+                // If count is 0 and this is the last digit, we skip appending to quotient (to avoid trailing zero)
+                if (count == 0 && i == num1.length() - 1) {
+                    continue;
+                }
+            
+                // Append the calculated digit (count) to the quotient
+                quotient.append(count);
+            }
+
+            // Remove leading zeros
+            while (quotient.length() > 0 && quotient.charAt(0) == '0') {
+                quotient.deleteCharAt(0);
+            }
+
+            // Add negative sign if needed
+            if (negative_result) {
+                quotient.insert(0, "-");
+            }
+
+            String result = quotient.toString();
+
+            return new AInteger(result);
         }
 
-        // Remove leading zeros
-        while (quotient.length() > 0 && quotient.charAt(0) == '0') {
-            quotient.deleteCharAt(0);
+        catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+            return new AInteger("undefined");
         }
-
-        // Add negative sign if needed
-        if (negative_result) {
-            quotient.insert(0, "-");
-        }
-
-        String result = quotient.toString();
-
-        return new AInteger(result);
     }
 
     // Prints the value of the integer
