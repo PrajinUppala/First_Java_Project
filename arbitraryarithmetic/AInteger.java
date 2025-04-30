@@ -1,6 +1,5 @@
-package myJava.arbitraryarithmetic;
 
-class AInteger {
+public class AInteger {
 
     private String integer;
 
@@ -402,7 +401,6 @@ class AInteger {
             result.printValue();  // This shouldn't run
         } catch (ArithmeticException e) {
             System.out.println( e.getMessage());
-        }
-                                                        
+        }                        
     }
 }
