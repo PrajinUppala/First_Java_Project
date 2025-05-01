@@ -1,3 +1,5 @@
+package arbitraryarithmetic;
+
 public class AFloat {
     
     private String floating;
@@ -22,36 +24,6 @@ public class AFloat {
         return new AFloat(s);
     }
 
-    // Removing Leading zeros if the given variable type is String
-    private static String removeLeadingZeros(String s) {
-        int decimal_index = s.indexOf('.');
-
-        for(int i = 0; i < decimal_index - 1; i++){
-            if(s.charAt(0) == '0'){
-                s = s.substring(1);
-            }
-            else{
-                break;
-            }
-        }
-        return s;
-    }
-
-    // Removing Leading zeros if the given variable type is StringBuilder
-    private static StringBuilder removeLeadingZeros(StringBuilder s) {
-        int decimal_index = s.indexOf(".");
-
-        for(int i = 0; i < decimal_index - 1; i++){
-            if(s.charAt(0) == '0'){
-                s.deleteCharAt(0);
-            }
-            else{
-                break;
-            }
-        }
-        return s;
-    }
-    
     // Method to convert a String which contains a floating point number to an array with removing the decimal
     public static int[] convertFloatStringToIntArray(String floatStr) {
         // Remove the decimal point
@@ -62,14 +34,26 @@ public class AFloat {
 
         // Convert each character to integer
         for (int i = 0; i < cleanStr.length(); i++) {
-            digits[i] = Character.getNumericValue(cleanStr.charAt(i));
+            digits[i] = cleanStr.charAt(i) - '0';
         }
 
         return digits;
     }
+    
+    public static String removeTrailingZeros(String s) {
+        // Remove trailing zeros
+        while (s.endsWith("0")) {
+            s = s.substring(0, s.length() - 1);
+        }
 
+        if(s.endsWith(".")){
+            s = s.substring(0, s.length() - 1);
+        }
+        return s;
+    }
+    
     // Main addition method handling both the signs
-    public AFloat add(AFloat other){
+    public AFloat add_Float(AFloat other){
         String num1 = this.floating;
         String num2 = other.floating;
 
@@ -92,7 +76,7 @@ public class AFloat {
     }
 
     // Main substraction method handling both signs
-    public AFloat substract(AFloat other) {
+    public AFloat substract_Float(AFloat other) {
         String num1 = this.floating;
         String num2 = other.floating;
     
@@ -119,10 +103,17 @@ public class AFloat {
     
     // Method to add two non-negative floating point numbers represented as strings
     public String add_strings_floating (String num1 , String num2){
-                
-        // Remove leading zeros from both num1, num2 strings
-        num1 = removeLeadingZeros(num1);
-        num2 = removeLeadingZeros(num2);
+
+        if(!(num1.contains("."))){
+            StringBuilder num1Builder = new StringBuilder(num1);
+            num1Builder.append(".");
+            num1 = num1Builder.toString();
+        }
+        if(!(num2.contains("."))){
+            StringBuilder num2Builder = new StringBuilder(num2);
+            num2Builder.append(".");
+            num2 = num2Builder.toString();
+        }
 
         // Store the decimal index of both the numbers
         int decimal_index_num1 = num1.indexOf('.');
@@ -162,14 +153,22 @@ public class AFloat {
         }
 
         String sum_float = sum_Builder.toString();
+        sum_float = removeTrailingZeros(sum_float);
         return sum_float;
     }
 
     public String substract_strings_floating(String num1 , String num2){
-                
-        // Remove leading zeros from both num1, num2 strings
-        num1 = removeLeadingZeros(num1);
-        num2 = removeLeadingZeros(num2);
+
+        if(!(num1.contains("."))){
+            StringBuilder num1Builder = new StringBuilder(num1);
+            num1Builder.append(".");
+            num1 = num1Builder.toString();
+        }
+        if(!(num2.contains("."))){
+            StringBuilder num2Builder = new StringBuilder(num2);
+            num2Builder.append(".");
+            num2 = num2Builder.toString();
+        }
 
         // Store the decimal index of both the numbers
         int decimal_index_num1 = num1.indexOf('.');
@@ -209,6 +208,7 @@ public class AFloat {
         }
 
         String substract_float = substract_Builder.toString();
+        substract_float = removeTrailingZeros(substract_float);
         return substract_float;
     }
 
@@ -217,10 +217,110 @@ public class AFloat {
         System.out.println(this.floating);
     }
 
+    public AFloat multiply_Float(AFloat other){
+        String num1 = this.floating;
+        String num2 = other.floating;
+
+        if(!(num1.contains("."))){
+            StringBuilder num1Builder = new StringBuilder(num1);
+            num1Builder.append(".");
+            num1 = num1Builder.toString();
+        }
+        if(!(num2.contains("."))){
+            StringBuilder num2Builder = new StringBuilder(num2);
+            num2Builder.append(".");
+            num2 = num2Builder.toString();
+        }
+
+        // Store the decimal index of both the numbers
+        int decimal_index_num1 = num1.indexOf('.');
+        int decimal_index_num2 = num2.indexOf('.');
+
+        // Store number of digits after the decimal point
+        int numDigitsAfterDecimal_num1 = num1.length() - decimal_index_num1 - 1;
+        int numDigitsAfterDecimal_num2 = num2.length() - decimal_index_num2 - 1;
+        
+        num1 = num1.replace(".", "");
+        num2 = num2.replace(".", "");
+
+        AInteger num1Int = new AInteger(num1);
+        AInteger num2Int = new AInteger(num2);
+
+        AInteger resultInt = num1Int.multiply(num2Int);
+
+        StringBuilder resultBuilder = new StringBuilder(resultInt.integer);
+        resultBuilder.insert(resultInt.integer.length() - numDigitsAfterDecimal_num1 - numDigitsAfterDecimal_num2,'.');
+        truncateTo30DecimalPlaces(resultBuilder);
+
+        return new AFloat(resultBuilder.toString());
+    }
+
+    public AFloat division_Float(AFloat other){
+        String num1 = this.floating;
+        String num2 = other.floating;
+
+        if(!(num1.contains("."))){
+            StringBuilder num1Builder = new StringBuilder(num1);
+            num1Builder.append(".");
+            num1 = num1Builder.toString();
+        }
+        if(!(num2.contains("."))){
+            StringBuilder num2Builder = new StringBuilder(num2);
+            num2Builder.append(".");
+            num2 = num2Builder.toString();
+        }
+        
+        // Store the decimal index of both the numbers
+        int decimal_index_num1 = num1.indexOf('.');
+        int decimal_index_num2 = num2.indexOf('.');
+
+        // Store number of digits after the decimal point
+        int numDigitsAfterDecimal_num1 = num1.length() - decimal_index_num1 - 1;
+        int numDigitsAfterDecimal_num2 = num2.length() - decimal_index_num2 - 1;
+
+        num1 = num1.replace(".", "");
+        num2 = num2.replace(".", "");
+
+        StringBuilder num1Builder = new StringBuilder(num1);
+
+        int numOfZerosNeededToAdd_num1 = 30 - numDigitsAfterDecimal_num1 + numDigitsAfterDecimal_num2;
+        while(numOfZerosNeededToAdd_num1>0){
+            num1Builder.append("0");
+            numOfZerosNeededToAdd_num1--;
+        }
+
+        num1 = num1Builder.toString();
+        
+        AInteger num1Int = new AInteger(num1);
+        AInteger num2Int = new AInteger(num2);
+
+        AInteger resultInt = num1Int.division(num2Int);
+
+        StringBuilder resultBuilder = new StringBuilder(resultInt.integer);
+        resultBuilder.insert(resultInt.integer.length() - 30,'.');
+        truncateTo30DecimalPlaces(resultBuilder);
+        
+        return new AFloat(resultBuilder.toString());
+    }
+
+    public static void truncateTo30DecimalPlaces(StringBuilder sb) {
+        int decimalIndex = sb.indexOf(".");
+        
+        // If there's no decimal point, nothing to do
+        if (decimalIndex == -1) return;
+    
+        int decimals = sb.length() - decimalIndex - 1;
+    
+        // If there are more than 30 digits after the decimal, truncate
+        if (decimals > 30) {
+            sb.delete(decimalIndex + 31, sb.length());
+        }
+    }
+    
     public static void main(String[] args) {
-        AFloat a = new AFloat( "100.");
-        AFloat b =new AFloat("200.");
-        AFloat result = a.add(b);
+        AFloat a = new AFloat("84486723.420039");
+        AFloat b =new AFloat("70974199.843732");
+        AFloat result = a.add_Float(b);
         result.printValue();
     }
 }

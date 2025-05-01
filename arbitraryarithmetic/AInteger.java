@@ -1,7 +1,8 @@
+package arbitraryarithmetic;
 
 public class AInteger {
 
-    private String integer;
+    protected String integer;
 
     // Default constructor sets the integer to "0"
     public AInteger() {
@@ -108,24 +109,15 @@ public class AInteger {
         StringBuilder sum = new StringBuilder();
         // Initialize the variable carry to 0
         int carry = 0;
+        
+        // Add digits from right to left
+        for (int i = 0; i < num1.length(); i++) {
+            int digit1 = num1.charAt(num1.length() - 1 - i) - '0';
+            int digit2 = (i < num2.length()) ? num2.charAt(num2.length() - 1 - i) - '0' : 0;
 
-        // Add from right to left for common length
-        for(int i = 0 ; i < num2.length() ; i++){
-            int digit1 = num1.charAt(num1.length()-i-1) - '0';
-            int digit2 = num2.charAt(num2.length()-i-1) - '0';
-            int adder = digit1 + digit2 + carry;
-            sum.insert(0, adder % 10);
-            carry = adder / 10;
-        }
-
-        // Continue with remaining digits of longer number
-        if (num1.length() > num2.length()) {
-            for(int i = num2.length(); i < num1.length(); i++){
-                int digit1 = num1.charAt(num1.length()-i-1) - '0';
-                int adder = digit1 + carry;
-                sum.insert(0, adder % 10);
-                carry = adder / 10;
-            }
+            int digitSum = digit1 + digit2 + carry;
+            sum.insert(0, digitSum % 10);
+            carry = digitSum / 10;
         }
 
         // Final carry if exists
@@ -288,7 +280,6 @@ public class AInteger {
         boolean negative_result = false;
 
         try{
-            
             // Determine if the final result should be negative
             if ((num1.startsWith("-") && !num2.startsWith("-")) || 
                 (num2.startsWith("-") && !num1.startsWith("-"))) {
@@ -382,8 +373,7 @@ public class AInteger {
         }
 
         catch (ArithmeticException e) {
-            System.out.println(e.getMessage());
-            return new AInteger("undefined");
+            return new AInteger(e.getMessage());
         }
     }
 
@@ -394,13 +384,9 @@ public class AInteger {
 
     // Sample test case in main method
     public static void main(String[] args) {
-        try {
-            AInteger a = new AInteger("987654321834979713239837487109885382986345146380986987132847149871497");
-            AInteger b = new AInteger("12");
-            AInteger result = a.division(b);
-            result.printValue();  // This shouldn't run
-        } catch (ArithmeticException e) {
-            System.out.println( e.getMessage());
-        }                        
+            AInteger a = new AInteger("84486723420039");
+            AInteger b = new AInteger("70974199843732");
+            AInteger result = a.add(b);
+            result.printValue();
     }
 }
