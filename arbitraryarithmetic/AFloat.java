@@ -214,7 +214,7 @@ public class AFloat {
             }
             else{
                 while (substract_Builder.length() <= maxDecimalDigits) {
-                    substract_Builder.insert(1, "0");
+                    substract_Builder.insert(0, "0");
                 }
             }
         }
@@ -274,12 +274,13 @@ public class AFloat {
             }
             else{
                 while (resultBuilder.length() <= maxDecimalDigits) {
-                    resultBuilder.insert(1, "0");
+                    resultBuilder.insert(0, "0");
                 }
             }
         }
 
-        resultBuilder.insert(resultInt.integer.length() - numDigitsAfterDecimal_num1 - numDigitsAfterDecimal_num2,'.');
+        resultBuilder.insert(resultBuilder.length() - maxDecimalDigits, '.');
+
         truncateTo30DecimalPlaces(resultBuilder);
 
         return new AFloat(resultBuilder.toString());
@@ -325,12 +326,22 @@ public class AFloat {
         AInteger num2Int = new AInteger(num2);
 
         AInteger resultInt = num1Int.division(num2Int);
+        if(resultInt.integer == "Division by zero error"){
+            return new AFloat("Division by zero error");
+        }
 
         StringBuilder resultBuilder = new StringBuilder(resultInt.integer);
-        resultBuilder.insert(resultInt.integer.length() - 30,'.');
-        truncateTo30DecimalPlaces(resultBuilder);
+
+        while (resultBuilder.length() <= 30) {
+            resultBuilder.insert(0, '0');
+        }
         
-        return new AFloat(resultBuilder.toString());
+        resultBuilder.insert(resultBuilder.length() - 30, '.');
+        
+        truncateTo30DecimalPlaces(resultBuilder);
+        String result = removeTrailingZeros(resultBuilder.toString());
+        
+        return new AFloat(result);
     }
 
     public static void truncateTo30DecimalPlaces(StringBuilder sb) {
@@ -348,9 +359,9 @@ public class AFloat {
     }
     
     public static void main(String[] args) {
-        AFloat a = new AFloat("0.00000001");
-        AFloat b =new AFloat("0.00000042");
-        AFloat result = a.multiply_Float(b);
+        AFloat a = new AFloat("0.0000000");
+        AFloat b =new AFloat("0.000000");
+        AFloat result = a.division_Float(b);
         result.printValue();
     }
 }
