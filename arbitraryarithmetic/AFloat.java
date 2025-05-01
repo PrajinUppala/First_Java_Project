@@ -57,19 +57,19 @@ public class AFloat {
         String num1 = this.floating;
         String num2 = other.floating;
 
-        // Case 1: Both negative -> Add absolute values and prefix "-"
+        // Case 1: If both num1 and num2 are negative add the absolute value and then put '-' sign
         if (num1.startsWith("-") && num2.startsWith("-")) {
             return new AFloat("-" + add_strings_floating(num1.substring(1), num2.substring(1)));
         }
-        // Case 2: num1 positive, num2 negative -> Subtract abs(num2) from num1
+        // Case 2: If num1 positive, num2 negative then Subtract absolute value of num2 from num1
         else if (!num1.startsWith("-") && num2.startsWith("-")) {
             return new AFloat(substract_strings_floating(num1, num2.substring(1)));
         }
-        // Case 3: num1 negative, num2 positive -> Subtract abs(num1) from num2
+        // Case 3: If num1 negative, num2 positive then Subtract absolute value of num1 from num2
         else if (num1.startsWith("-") && !num2.startsWith("-")) {
             return new AFloat(substract_strings_floating(num2, num1.substring(1)));
         }
-        // Case 4: Both positive -> Simple addition
+        // Case 4: Both positive then Simple addition
         else {
             return new AFloat(add_strings_floating(num1, num2));
         }
@@ -80,12 +80,12 @@ public class AFloat {
         String num1 = this.floating;
         String num2 = other.floating;
     
-        // Case 1: (-num1) - (-num2) → same as num2 - num1
+        // Case 1: (-num1) - (-num2) then do num2 - num1
         if (num1.startsWith("-") && num2.startsWith("-")) {
             return new AFloat(substract_strings_floating(num2.substring(1), num1.substring(1)));
         }
     
-        // Case 2: num1 - (-num2) → same as num1 + num2
+        // Case 2: num1 - (-num2) →then do num1 + num2
         else if (!num1.startsWith("-") && num2.startsWith("-")) {
             return new AFloat(add_strings_floating(num1, num2.substring(1)));
         }
@@ -145,12 +145,16 @@ public class AFloat {
         String sum_without_decimal = aInt.add_strings_integer(num1_Builder.toString(),num2_Builder.toString());
         StringBuilder sum_Builder = new StringBuilder(sum_without_decimal);
 
-        if (numDigitsAfterDecimal_num1 > numDigitsAfterDecimal_num2){
-            sum_Builder.insert(sum_without_decimal.length() - numDigitsAfterDecimal_num1, '.');
+        int maxDecimalDigits = Math.max(numDigitsAfterDecimal_num1, numDigitsAfterDecimal_num2);
+
+        if (sum_Builder.length() <= maxDecimalDigits) {
+            while (sum_Builder.length() <= maxDecimalDigits) {
+                sum_Builder.insert(0, "0");
+            }
         }
-        else{
-            sum_Builder.insert(sum_without_decimal.length() - numDigitsAfterDecimal_num2, '.');
-        }
+
+        sum_Builder.insert(sum_Builder.length() - maxDecimalDigits, '.');
+        
 
         String sum_float = sum_Builder.toString();
         sum_float = removeTrailingZeros(sum_float);
@@ -200,12 +204,22 @@ public class AFloat {
         String substract_without_decimal = aInt.substract_strings_integer(num1_Builder.toString(),num2_Builder.toString());
         StringBuilder substract_Builder = new StringBuilder(substract_without_decimal);
 
-        if (numDigitsAfterDecimal_num1 > numDigitsAfterDecimal_num2){
-            substract_Builder.insert(substract_without_decimal.length() - numDigitsAfterDecimal_num1, '.');
+        int maxDecimalDigits = Math.max(numDigitsAfterDecimal_num1, numDigitsAfterDecimal_num2);
+
+        if (substract_Builder.length() <= maxDecimalDigits) {
+            if(substract_Builder.charAt(0) == '-'){
+                while (substract_Builder.length() <= maxDecimalDigits + 1) {
+                    substract_Builder.insert(1, "0");
+                }
+            }
+            else{
+                while (substract_Builder.length() <= maxDecimalDigits) {
+                    substract_Builder.insert(1, "0");
+                }
+            }
         }
-        else{
-            substract_Builder.insert(substract_without_decimal.length() - numDigitsAfterDecimal_num2, '.');
-        }
+        
+        substract_Builder.insert(substract_Builder.length() - maxDecimalDigits, '.');
 
         String substract_float = substract_Builder.toString();
         substract_float = removeTrailingZeros(substract_float);
@@ -249,6 +263,22 @@ public class AFloat {
         AInteger resultInt = num1Int.multiply(num2Int);
 
         StringBuilder resultBuilder = new StringBuilder(resultInt.integer);
+        
+        int maxDecimalDigits = numDigitsAfterDecimal_num1 + numDigitsAfterDecimal_num2;
+
+        if (resultBuilder.length() <= maxDecimalDigits) {
+            if(resultBuilder.charAt(0) == '-'){
+                while (resultBuilder.length() <= maxDecimalDigits + 1) {
+                    resultBuilder.insert(1, "0");
+                }
+            }
+            else{
+                while (resultBuilder.length() <= maxDecimalDigits) {
+                    resultBuilder.insert(1, "0");
+                }
+            }
+        }
+
         resultBuilder.insert(resultInt.integer.length() - numDigitsAfterDecimal_num1 - numDigitsAfterDecimal_num2,'.');
         truncateTo30DecimalPlaces(resultBuilder);
 
@@ -318,9 +348,9 @@ public class AFloat {
     }
     
     public static void main(String[] args) {
-        AFloat a = new AFloat("84486723.420039");
-        AFloat b =new AFloat("70974199.843732");
-        AFloat result = a.add_Float(b);
+        AFloat a = new AFloat("0.00000001");
+        AFloat b =new AFloat("0.00000042");
+        AFloat result = a.multiply_Float(b);
         result.printValue();
     }
 }
