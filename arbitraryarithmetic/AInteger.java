@@ -322,9 +322,6 @@ public class AInteger {
                 return new AInteger(negative_result ? "-1" : "1");
             }
 
-            // Initialize a variable to store the remainder (will hold leftover part after division)
-            String remainder;
-
             // StringBuilder to construct the quotient (final division result)
             StringBuilder quotient = new StringBuilder();
 
@@ -346,11 +343,6 @@ public class AInteger {
                 while (!current.equals("0") && !substract_strings_integer(current, num2).startsWith("-")) {
                     current = substract_strings_integer(current, num2);
                     count++; // Increment the quotient digit
-                }
-            
-                // If count is 0 and this is the last digit, we skip appending to quotient (to avoid trailing zero)
-                if (count == 0 && i == num1.length() - 1) {
-                    continue;
                 }
             
                 // Append the calculated digit (count) to the quotient
@@ -384,9 +376,9 @@ public class AInteger {
 
     // Sample test case in main method
     public static void main(String[] args) {
-            AInteger a = new AInteger("84486723420039");
-            AInteger b = new AInteger("70974199843732");
-            AInteger result = a.add(b);
+            AInteger a = new AInteger("81943");
+            AInteger b = new AInteger("20");
+            AInteger result = a.division(b);
             result.printValue();
     }
 }

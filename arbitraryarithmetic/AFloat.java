@@ -226,11 +226,6 @@ public class AFloat {
         return substract_float;
     }
 
-    // Prints the value of the floating point number
-    public void printValue() {
-        System.out.println(this.floating);
-    }
-
     public AFloat multiply_Float(AFloat other){
         String num1 = this.floating;
         String num2 = other.floating;
@@ -291,14 +286,10 @@ public class AFloat {
         String num2 = other.floating;
 
         if(!(num1.contains("."))){
-            StringBuilder num1Builder = new StringBuilder(num1);
-            num1Builder.append(".");
-            num1 = num1Builder.toString();
+            num1 = num1 + ".0" ;
         }
         if(!(num2.contains("."))){
-            StringBuilder num2Builder = new StringBuilder(num2);
-            num2Builder.append(".");
-            num2 = num2Builder.toString();
+            num2 = num2 + ".0" ;
         }
         
         // Store the decimal index of both the numbers
@@ -314,10 +305,9 @@ public class AFloat {
 
         StringBuilder num1Builder = new StringBuilder(num1);
 
-        int numOfZerosNeededToAdd_num1 = 30 - numDigitsAfterDecimal_num1 + numDigitsAfterDecimal_num2;
-        while(numOfZerosNeededToAdd_num1>0){
+        int numOfZerosNeededToAdd_num1 = 30 + numDigitsAfterDecimal_num1 - numDigitsAfterDecimal_num2;
+        for(int i = 0; i < numOfZerosNeededToAdd_num1 ; i++){
             num1Builder.append("0");
-            numOfZerosNeededToAdd_num1--;
         }
 
         num1 = num1Builder.toString();
@@ -335,9 +325,9 @@ public class AFloat {
         while (resultBuilder.length() <= 30) {
             resultBuilder.insert(0, '0');
         }
-        
+
         resultBuilder.insert(resultBuilder.length() - 30, '.');
-        
+
         truncateTo30DecimalPlaces(resultBuilder);
         String result = removeTrailingZeros(resultBuilder.toString());
         
@@ -358,9 +348,14 @@ public class AFloat {
         }
     }
     
+    // Prints the value of the floating point number
+    public void printValue() {
+        System.out.println(this.floating);
+    }
+
     public static void main(String[] args) {
-        AFloat a = new AFloat("0.0000000");
-        AFloat b =new AFloat("0.000000");
+        AFloat a = new AFloat("3227");
+        AFloat b =new AFloat("555");
         AFloat result = a.division_Float(b);
         result.printValue();
     }
