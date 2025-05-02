@@ -39,8 +39,8 @@ python3 run.py int mul 123456789 987654321
 ---
 
 ### Option 2: Using Docker
-
-
+#### Build docker
+sudo docker build -t javaproject .
 #### Run Program
 
 sudo docker run --rm java-inf-arith float div 244727.15202 75964.3891
