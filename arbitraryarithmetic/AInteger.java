@@ -374,11 +374,4 @@ public class AInteger {
         System.out.println(this.integer);
     }
 
-    // Sample test case in main method
-    public static void main(String[] args) {
-            AInteger a = new AInteger("819434567891234567");
-            AInteger b = new AInteger("212345678909876543212345678900987654");
-            AInteger result = a.division(b);
-            result.printValue();
-    }
 }

@@ -335,11 +335,4 @@ public class AFloat {
         System.out.println(this.floating);
     }
 
-    // Main method for testing
-    public static void main(String[] args) {
-        AFloat a = new AFloat("3227");
-        AFloat b = new AFloat("555");
-        AFloat result = a.division_Float(b);
-        result.printValue();
-    }
 }
