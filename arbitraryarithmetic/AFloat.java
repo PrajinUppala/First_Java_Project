@@ -305,7 +305,7 @@ public class AFloat {
 
         StringBuilder num1Builder = new StringBuilder(num1);
 
-        int numOfZerosNeededToAdd_num1 = 30 + numDigitsAfterDecimal_num1 - numDigitsAfterDecimal_num2;
+        int numOfZerosNeededToAdd_num1 = 30 - numDigitsAfterDecimal_num1 + numDigitsAfterDecimal_num2;
         for(int i = 0; i < numOfZerosNeededToAdd_num1 ; i++){
             num1Builder.append("0");
         }
