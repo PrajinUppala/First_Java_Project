@@ -2,16 +2,29 @@
 
     <property name="src.dir"     value="arbitraryarithmetic"/>
     <property name="build.dir"   value="build"/>
+    <property name="jar.dir"     value="dist"/>
+    <property name="jar.name"    value="SDF_java_project.jar"/>
 
     <!-- Clean previous build -->
     <target name="clean">
         <delete dir="${build.dir}"/>
+        <delete dir="${jar.dir}"/>
     </target>
 
     <!-- Compile the Java source files -->
     <target name="compile" depends="clean">
         <mkdir dir="${build.dir}"/>
         <javac srcdir="${src.dir}" destdir="${build.dir}"/>
+    </target>
+
+    <!-- Create a JAR file after compiling -->
+    <target name="createjar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${jar.name}" basedir="${build.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="arbitraryarithmetic.MyInfArith"/>
+            </manifest>
+        </jar>
     </target>
 
 </project>
